@@ -1,63 +1,52 @@
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <queue>
-#include <vector>
-#include <utility>
-#include <deque>
-#include <string>
-#include <limits>
-#include <cmath>
-#include <cstring>
-#include <array>
+#include <bits/stdc++.h>
 using namespace std;
+#define FIO ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
 typedef long long ll;
 typedef pair<int, int> p;
 typedef pair<int, p> pp;
 
-int n, m, k, s = 1;
-vector <int> v;
-ll arr[3000005], num;
+ll n, m, k;
+vector <ll> v, tree;
 
-void go(int i, ll x) {
-	i += s - 1;
-	arr[i] = x;
-	while (i) {
-		i /= 2;
-		if (!i)break;
-		arr[i] = arr[i * 2] + arr[i * 2 + 1];
+ll sum(int i) {
+	int idx = i;
+	ll ans = 0;
+	while (idx > 0) {
+		ans += tree[idx];
+		idx -= idx & -idx;
 	}
+	return ans;
 }
 
-
-ll seg(int start, int end, int l, int r, int c) {//c 현재
- 	if (l > end || start > r)return 0;
-	else if (l <= start && r >= end)return arr[c];
-	int mid = (start + end) / 2;
-	ll x = seg(start, mid, l, r, c * 2);
-	ll y = seg(mid + 1, end, l, r, c * 2 + 1);
-	return  x + y;
+void update(int i, ll diff) {
+	int idx = i;
+	while (idx < tree.size()) {
+		tree[idx] += diff;
+		idx += idx & -idx;
+	}
 }
 
 int main() {
-	cin.tie(NULL);
-	ios::sync_with_stdio(false);
-
+	FIO;
 	cin >> n >> m >> k;
-	while (n > s)
-		s <<= 1;
+	v.resize(n + 5);
+	tree.resize(n + 5);
 
 	for (int i = 1; i <= n; i++) {
-		cin >> num;
-		go(i, num);
+		cin >> v[i];
+		update(i, v[i]);
 	}
-
-	for (int i = 0; i < m + k; i++) {
-		ll a, b, c, sum = 0;
-		cin >> a >> b >> c;
-		if (a == 1)go(b, c);
+	
+	m += k;
+	while (m--) {
+		ll a, b, c; cin >> a >> b >> c;
+		if (a == 1) {
+			ll diff = c - v[b];
+			v[b] = c;
+			update(b, diff);
+		}
 		else {
-			cout << seg(1, s, b, c, 1) << "\n";
+			cout << sum(c) - sum(b - 1) << "\n";
 		}
 	}
 	return 0;
