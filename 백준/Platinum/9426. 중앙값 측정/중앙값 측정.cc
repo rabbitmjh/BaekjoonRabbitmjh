@@ -1,56 +1,61 @@
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <queue>
-#include <vector>
-#include <utility>
-#include <deque>
-#include <string>
-#include <limits>
-#include <cmath>
-#include <cstring>
-#include <array>
+#include <bits/stdc++.h>
 using namespace std;
+#define FIO ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
 typedef long long ll;
 typedef pair<int, int> p;
 typedef pair<int, p> pp;
 
-int n, m, arr[500005];
+int n, k, arr[65540];
 ll ans;
-queue <int> q;
+vector <int> v;
 
-void update(int start, int end, int a, int num, int cnt) {
-	if (start <= a && a <= end) {
-		arr[num] += cnt;
-		if (start == end)return;
-		update(start, (start + end) / 2, a, num * 2, cnt);
-		update((start + end) / 2 + 1, end, a, num * 2 + 1, cnt);
+
+ll sum(int i) {
+	int idx = i;
+	ll ans = 0;
+	while (idx > 0) {
+		ans += arr[idx];
+		idx -= idx & -idx;
+	}
+	return ans;
+}
+
+void update(int i, int val) {
+	int idx = i;
+	while (idx <= 65536) {
+		arr[idx] += val;
+		idx += idx & -idx;
 	}
 }
 
 
-int seg(int start, int end, int num, int t) {//c 현재
-	if (start == end) return start;
-	else if (arr[num * 2] >= t)
-		return seg(start, (start + end) / 2, num * 2, t);
-	else 
-		return seg((start + end) / 2 + 1, end, num * 2 + 1, t - arr[num * 2]);
-}
-
 int main() {
-	cin.tie(NULL);
-	ios::sync_with_stdio(false);
+	FIO;
 
-	cin >> n >> m;
+	cin >> n >> k;
+	v.resize(n + 5);
 
-	for (int i = 0; i < n; i++) {
-		int a; cin >> a;
-		q.push(a);
-		update(0, 65536, a, 1, 1);
-		if (i >= m - 1) {
-			ans += seg(0, 65536, 1, (m + 1) / 2);
-			update(0, 65536, q.front(), 1, -1);
-			q.pop();
+	for (int i = 1; i <= n; i++) {
+		int a; cin >> v[i];
+
+		update(++v[i], 1);
+
+		if (i >= k) {
+			int left = 1, right = 65536, cur;
+
+			while (left <= right) {
+				int mid = (left + right) / 2;
+				if (sum(mid) >= (k + 1) / 2) {//중앙값인지
+					right = mid - 1;
+					cur = mid;
+				}
+				else {
+					left = mid + 1;
+				}
+			}
+			ans += cur - 1;
+
+			update(v[i - k + 1], -1);
 		}
 	}
 
