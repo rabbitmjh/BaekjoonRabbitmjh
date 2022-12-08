@@ -1,47 +1,32 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <functional>
-#include <queue>
-#include <string>
-#include <cstring>
+#include <bits/stdc++.h>
 using namespace std;
-int arr[10005];
+#define FIO ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+typedef long long ll;
+typedef pair<ll, ll> p;
+typedef pair<int, p> pp;
 
-int n, c,sum,a;
-int go(int i, int a) {
-	if (arr[i] > c || a > c)return 0;
-	if (arr[i] == c || a == c) {
-		sum++;
-		return 0;
-	}
-	if (arr[i] < c) {
-		a += arr[i];
-		if (a == c) {
-			sum++;
-			return 0;
-		}
-		if (arr[i + 1] + a>c)return 0;
-		if (i != n) {
-			go(i + 1, a);
-			return 0;
-		}
-	}
-
-
-}
-
+int n, m, arr[10005], ans, l, r, sum;
 
 int main() {
-	scanf("%d %d", &n,&c);
-	for (int i = 0; i < n; i++) {
-		scanf("%d", &arr[i]);
-	}
-	for (int i = 0; i < n; i++) {
-		a = 0;
-		go(i,0);
-	}
-	printf("%d", sum);
+	FIO;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+	
 
+	while (1) {
+		if (sum >= m) {
+			sum -= arr[l];
+			l++;
+		}
+		else if (r == n)break;
+		else {
+			sum += arr[r];
+			r++;
+		}
+		if (sum == m)ans++;
+	}
+			
+	cout << ans;
 	return 0;
 }
