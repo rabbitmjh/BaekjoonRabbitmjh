@@ -1,19 +1,14 @@
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <vector>
-#include <queue>
-#include <string>
-#include <cstring>
-#include <string.h>
-#include <utility>
+#include <bits/stdc++.h>
 using namespace std;
-typedef pair<int, int> p;
+#define FIO ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
 typedef long long ll;
+typedef pair<ll, ll> p;
+typedef pair<int, p> pp;
 
-vector<ll>segMin;
-vector<ll>segMax;
-int h = 1;
+vector <ll> segMin;
+vector <ll> segMax;
+int h = 1, n, m;
+
 void update(int i, ll val) {
 	i += h - 1;
 	int a = i, b = i;
@@ -29,6 +24,7 @@ void update(int i, ll val) {
 		segMax[b] = max(segMax[b * 2], segMax[b * 2 + 1]);
 	}
 }
+
 ll queryMax(int L, int R, int nodeNum, int nodeL, int nodeR) {
 	if (L <= nodeL && nodeR <= R) return segMax[nodeNum];
 	else if (nodeR < L || R < nodeL) return -1;
@@ -37,31 +33,33 @@ ll queryMax(int L, int R, int nodeNum, int nodeL, int nodeR) {
 }
 ll queryMin(int L, int R, int nodeNum, int nodeL, int nodeR) {
 	if (L <= nodeL && nodeR <= R) return segMin[nodeNum];
-	else if (nodeR < L || R < nodeL) return 1e10+1;
+	else if (nodeR < L || R < nodeL) return 1e10 + 1;
 	int mid = (nodeL + nodeR) / 2;
 	return min(queryMin(L, R, nodeNum * 2, nodeL, mid), queryMin(L, R, nodeNum * 2 + 1, mid + 1, nodeR));
 }
 
 int main() {
-	int N, M;
-	scanf("%d %d", &N, &M);
-	while (N > h)h <<= 1;
+	FIO;
+	cin >> n >> m;
+	while (n > h)
+		h <<= 1;
+
 	segMin.resize(h * 2);
-	fill(segMin.begin(),segMin.end(), 1e11);
+	fill(segMin.begin(), segMin.end(), INT_MAX);
 	segMax.resize(h * 2);
 	fill(segMax.begin(), segMax.end(), -1);
 
-	for (int i = 1; i <= N; i++) {
+	for (int i = 1; i <= n; i++) {
 		ll x;
-		scanf("%lld", &x);
+		cin >> x;
 		update(i, x);
 	}
-	for (int i = 0; i < M; i++) {
-		int a, b;
-		ll c;
-		scanf("%d %d", &b, &c);
-		printf("%lld ", queryMin(b, c, 1, 1, h));
-		printf("%lld\n", queryMax(b, c, 1, 1, h));
+	for (int i = 0; i < m; i++) {
+		ll b, c;
+		cin >> b >> c;
+		cout << queryMin(b, c, 1, 1, h) << " ";
+		cout << queryMax(b, c, 1, 1, h) << "\n";
 	}
+
 	return 0;
 }
