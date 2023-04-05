@@ -1,16 +1,6 @@
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <queue>
-#include <vector>
-#include <utility>
-#include <deque>
-#include <string>
-#include <limits>
-#include <cmath>
-#include <cstring>
-#include <array>
+#include <bits/stdc++.h>
 using namespace std;
+#define FIO ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
 typedef long long ll;
 typedef pair<int, int> p;
 typedef pair<int, p> pp;
@@ -19,8 +9,7 @@ string s1, s2;
 int arr[1005][1005], ans;
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	FIO;
 
 	cin >> s1 >> s2;
 	swap(s1, s2);
