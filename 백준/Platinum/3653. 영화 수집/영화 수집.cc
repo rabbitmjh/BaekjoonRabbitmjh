@@ -1,8 +1,12 @@
-#include <cstdio>
-#include <algorithm>
-#include <cstring>
+#include <bits/stdc++.h>
+using namespace std;
+#define FIO ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+typedef long long ll;
+typedef pair<int, int> p;
+typedef pair<int, p> pp;
 #define MAX_N 100000
 using namespace std;
+
 int seg[8 * MAX_N], a[2 * MAX_N + 1], t, n, m, v;
 int update(int pos, int val, int node, int x, int y) {
     if (y < pos || pos < x)
@@ -21,11 +25,12 @@ int query(int lo, int hi, int node, int x, int y) {
     return query(lo, hi, node * 2, x, mid) + query(lo, hi, node * 2 + 1, mid + 1, y);
 }
 int main() {
-    scanf("%d", &t);
+    FIO;
+    cin >> t;
     while (t--) {
         memset(a, 0, sizeof(a));
         memset(seg, 0, sizeof(seg));
-        scanf("%d%d", &n, &m);
+        cin >> n >> m;
         int idx = m + 1;
         for (int i = idx; i <= n + m; i++) {
             update(i, 1, 1, 1, n + m);
@@ -33,13 +38,13 @@ int main() {
         }
         idx = m;
         for (int i = 0; i < m; i++) {
-            scanf("%d", &v);
-            printf("%d ", query(1, a[v] - 1, 1, 1, n + m));
+            cin >> v;
+            cout << query(1, a[v] - 1, 1, 1, n + m) << " ";
             update(a[v], 0, 1, 1, n + m);
             a[v] = idx--;
             update(a[v], 1, 1, 1, n + m);
         }
-        printf("\n");
+        cout << "\n";
     }
     return 0;
 }
