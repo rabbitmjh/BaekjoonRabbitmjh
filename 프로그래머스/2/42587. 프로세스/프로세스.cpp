@@ -8,7 +8,7 @@ int solution(vector<int> priorities, int location) {
     int cnt = 1;
     int mx = 0;
     int idx = 0;
-    while (cnt <= priorities.size())
+    while (cnt < priorities.size())
     {
         int st = idx;
         for (int i = st; i < priorities.size(); i++)
